@@ -25,10 +25,11 @@ async def getSpools() -> None:
         print("Extruder Temp: " + str(single_spool.filament.extruder_temp))
         print("Bed Temp: " + str(single_spool.filament.bed_temp))
 
-
+def sendGCode(command):
+    subprocess.run("echo '" + command + "' > ~/printer_data/comms/klippy.serial", shell=True)
 
 match sys.argv[1]:
-    case Spools:
+    case "Spools":
         asyncio.run(getSpools())
     case _:
-        subprocess.run("echo """)
+        sendGCode("RESPOND TYPE=error MSG='An error has occurred.'")
