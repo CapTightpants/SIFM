@@ -13,30 +13,23 @@ class SpoolData:
     extruderTemp = []
     bedTemp = []
 
+def sanitize(toSanitize) -> str:
+    toSanitize.replace('\xa0', ' ')
+    return toSanitize
+
 
 async def getSpools() -> SpoolData:
     """Show basic information about the Spoolman API."""
     async with Spoolman(host=SERVER_ADDRESS) as client:
         spoolData = SpoolData()
-        # print("All spools")
-        # print("==========")
+        # IMPORTANT: The index of the parameter matches the ID number of the spool!
         spools: list[Spool] = await client.get_spools()
         for spool in spools:
-            spoolData.names.append(spool.filament.name)
-            spoolData.materials.append(spool.filament.material)
-            spoolData.extruderTemp.append(spool.filament.extruder_temp)
-            spoolData.bedTemp.append(spool.filament.bed_temp)
+            spoolData.names.insert(spool.id, spool.filament.name)
+            spoolData.materials.insert(spool.id, spool.filament.material)
+            spoolData.extruderTemp.insert(spool.id, spool.filament.extruder_temp)
+            spoolData.bedTemp.insert(spool.id, spool.filament.bed_temp)
         return spoolData
-            
-        #
-        # print()
-        # print("Single spool")
-        # print("============")
-
-        # single_spool: Spool = await client.get_spool(spool_id=3)
-        # print("Name: " + str(single_spool.filament.name))
-        # print("Extruder Temp: " + str(single_spool.filament.extruder_temp))
-        # print("Bed Temp: " + str(single_spool.filament.bed_temp))
 
 def sendGCode(command):
     subprocess.run("echo '" + command + "' > ~/printer_data/comms/klippy.serial", shell=True)
@@ -44,8 +37,7 @@ def sendGCode(command):
 def respond() -> None:
     spoolData = asyncio.run(getSpools())
     namesStr = ",".join(spoolData.names)
-    print(len(spoolData.names))
-    sendGCode('SIFM_PROMPT names=' + namesStr)
+    sendGCode('SIFM_PROMPT NAMES="' + namesStr + '"')
 
 match sys.argv[1]:
     case "Spools":
