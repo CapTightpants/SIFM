@@ -1,6 +1,7 @@
 import sys
 import asyncio
 import subprocess
+import unicodedata
 from spoolman import Spool, Spoolman
 
 # argument = sys.argv[1]
@@ -14,8 +15,8 @@ class SpoolData:
     bedTemp = []
 
 def sanitize(toSanitize) -> str:
-    toSanitize.replace('\xa0', ' ')
-    return toSanitize
+    sanitized = unicodedata.normalize("NFKD", toSanitize)
+    return sanitized
 
 
 async def getSpools() -> SpoolData:
@@ -25,10 +26,10 @@ async def getSpools() -> SpoolData:
         # IMPORTANT: The index of the parameter matches the ID number of the spool!
         spools: list[Spool] = await client.get_spools()
         for spool in spools:
-            spoolData.names.insert(spool.id, spool.filament.name)
+            spoolData.names.insert(spool.id, sanitize(spool.filament.name))
             spoolData.materials.insert(spool.id, spool.filament.material)
-            spoolData.extruderTemp.insert(spool.id, spool.filament.extruder_temp)
-            spoolData.bedTemp.insert(spool.id, spool.filament.bed_temp)
+            spoolData.extruderTemp.insert(spool.id, str(spool.filament.extruder_temp))
+            spoolData.bedTemp.insert(spool.id, str(spool.filament.bed_temp))
         return spoolData
 
 def sendGCode(command):
@@ -37,9 +38,9 @@ def sendGCode(command):
 def respond() -> None:
     spoolData = asyncio.run(getSpools())
     namesStr = ",".join(spoolData.names)
-    materialsStr = ",".join(spoolData.names)
-    extruderStr = ",".join(spoolData.names)
-    bedStr = ",".join(spoolData.names)
+    materialsStr = ",".join(spoolData.materials)
+    extruderStr = ",".join(spoolData.extruderTemp)
+    bedStr = ",".join(spoolData.bedTemp)
     sendGCode('SIFM_PROMPT NAMES="' + namesStr + '" MATERIALS="' + materialsStr + '" EXTRUDERS="' + extruderStr + '" BEDS="' + bedStr + '"')
 
 match sys.argv[1]:
