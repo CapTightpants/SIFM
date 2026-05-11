@@ -37,7 +37,10 @@ def sendGCode(command):
 def respond() -> None:
     spoolData = asyncio.run(getSpools())
     namesStr = ",".join(spoolData.names)
-    sendGCode('SIFM_PROMPT NAMES="' + namesStr + '"')
+    materialsStr = ",".join(spoolData.names)
+    extruderStr = ",".join(spoolData.names)
+    bedStr = ",".join(spoolData.names)
+    sendGCode('SIFM_PROMPT NAMES="' + namesStr + '" MATERIALS="' + materialsStr + '" EXTRUDERS="' + extruderStr + '" BEDS="' + bedStr + '"')
 
 match sys.argv[1]:
     case "Spools":
