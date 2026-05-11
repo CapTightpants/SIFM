@@ -41,7 +41,7 @@ def respond() -> None:
     materialsStr = ",".join(spoolData.materials)
     extruderStr = ",".join(spoolData.extruderTemp)
     bedStr = ",".join(spoolData.bedTemp)
-    sendGCode('SIFM_PROMPT NAMES="' + namesStr + '" MATERIALS="' + materialsStr + '" EXTRUDERS="' + extruderStr + '" BEDS="' + bedStr + '"')
+    sendGCode('_SIFM_PROMPT NAMES="' + namesStr + '" MATERIALS="' + materialsStr + '" EXTRUDERS="' + extruderStr + '" BEDS="' + bedStr + '"')
 
 match sys.argv[1]:
     case "Spools":
