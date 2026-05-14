@@ -6,7 +6,7 @@ from spoolman import Spool, Spoolman
 
 # argument = sys.argv[1]
 
-SERVER_ADDRESS = "10.50.1.7"
+SERVER_ADDRESS = sys.argv[2]
 
 class SpoolData:
     names = []
