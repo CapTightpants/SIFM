@@ -13,8 +13,8 @@ while [ 1 == 1 ]; do
             break
             ;;
         [Nn])
-            printf 'Goodbye.'
-            exit [N]
+            printf '\nGoodbye.\n'
+            exit 0
             ;;
         *)
             printf '\nInvalid response.'
@@ -26,14 +26,15 @@ done
 printf '\nSetting up venv...'
 python3 -m venv $HOME/SIFM/venv
 
-printf '\nDone!\nInstalling Dependencies...'
+printf '\nDone!\nInstalling Dependencies...\n'
 ./venv/bin/pip3 install -r $HOME/SIFM/requirements.txt
 
-printf '\nDone!\nCopying configs...'
+printf '\nDone!\nCopying configs...\n'
 
 if [ -d $HOME/printer_data/config/ ]; then
     cp -ir $HOME/SIFM/klipper/* $HOME/printer_data/config
     printf '\nSuccess!\n'
+    exit 0
 else
     printf '\nprinter_data not found! Please copy the klipper configs manually.\n'
 fi
