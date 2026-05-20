@@ -1,12 +1,5 @@
 #!/bin/bash
 
-<<<<<<< Updated upstream
-printf 'Setting up venv...\n'
-python3 -m venv ./venv
-
-printf '\nDone!\nInstalling Dependencies...\n'
-./venv/bin/pip3 install -r ./requirements.txt
-=======
 while [ 1 == 1 ]; do
     printf '\nThis script will setup a virtual environment for SIFM and clone the configs to your printer_data. Continue? '
     read -r -n 1 -p "Y/n: " answer
@@ -36,7 +29,7 @@ python3 -m venv $HOME/SIFM/venv
 printf '\nDone!\nInstalling Dependencies...'
 ./venv/bin/pip3 install -r $HOME/SIFM/requirements.txt
 
-printf '\nDone!\nCopying configs...\n'
+printf '\nDone!\nCopying configs...'
 
 if [ -d $HOME/printer_data/config/ ]; then
     cp -ir $HOME/SIFM/klipper/* $HOME/printer_data/config
@@ -44,4 +37,3 @@ if [ -d $HOME/printer_data/config/ ]; then
 else
     printf '\nprinter_data not found! Please copy the klipper configs manually.\n'
 fi
->>>>>>> Stashed changes
