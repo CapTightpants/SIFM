@@ -16,9 +16,12 @@ while [ 1 == 1 ]; do
             ;;
         *)
             printf '\nInvalid response.'
+            sleep 2
             clear
             ;;
     esac
 done
 
 cp ~/SIFM/klipper/SIFM/* ~/printer_data/config/SIFM
+
+printf '\nDone!\n'
